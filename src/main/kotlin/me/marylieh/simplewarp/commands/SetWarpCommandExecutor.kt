@@ -18,9 +18,9 @@ class SetWarpCommandExecutor : CommandExecutor {
 
         if (player.hasPermission("simplewarp.setwarp")) {
 
-            if (Config.getConfig().get("PlayerWarpsOnly") == null) {
-                Config.getConfig().set("PlayerWarpsOnly", false)
-                println("Old Version of Config detected! Setting PlayerWarpsOnly to false!")
+            if (Config.getConfig().get("player-warps-only") == null) {
+                Config.getConfig().set("player-warps-only", false)
+                println("Old Version of Config detected! Setting player-warps-only to false!")
                 Config.save()
             }
 

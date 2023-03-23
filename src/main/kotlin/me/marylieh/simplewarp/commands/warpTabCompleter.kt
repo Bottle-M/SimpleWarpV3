@@ -13,13 +13,13 @@ class WarpTabCompleter : TabCompleter {
         val player: Player = sender
         if (player.hasPermission("simplewarp.warps")) {
 
-            if (Config.getConfig().get("PlayerWarpsOnly") == null) {
-                Config.getConfig().set("PlayerWarpsOnly", false)
-                println("Old Version of Config detected! Setting PlayerWarpsOnly to false!")
+            if (Config.getConfig().get("player-warps-only") == null) {
+                Config.getConfig().set("player-warps-only", false)
+                println("Old Version of Config detected! Setting player-warps-only to false!")
                 Config.save()
             }
 
-            if (Config.getConfig().getBoolean("PlayerWarpsOnly")) {
+            if (Config.getConfig().getBoolean("player-warps-only")) {
                 val filtered = Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)?.filter{value -> value.lowercase().startsWith(args[0].lowercase())}
                     ?.filter { Config.getConfig().getString(".Warps.${it}.Owner") == player.uniqueId.toString() }
                 filtered?.forEach{list.add(it)}

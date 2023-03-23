@@ -22,7 +22,7 @@ class PositionCommandExecutor : CommandExecutor {
             return true
         }
 
-        if (!Config.getConfig().getBoolean("PositionSystem")) {
+        if (!Config.getConfig().getBoolean("position-system")) {
             player.sendMessage("${SimpleWarp.instance.prefix} §cThis feature has been disabled by a Network Administrator!")
             return true
         }
