@@ -11,19 +11,21 @@ class SimpleWarp : JavaPlugin() {
     val prefix = "§6[SimpleWarp]"
     val version = "3.7"
 
+    // 伴生对象
     companion object {
         lateinit var instance: SimpleWarp
             private set
     }
 
     override fun onLoad() {
+        Config.setPlugin(this) // 将Plugin对象传递给Config
+        TeleportDelayer.setPlugin(this) // 将Plugin对象传递给TeleportDelayer
         Config.loadConfig()
         instance = this
     }
 
     override fun onEnable() {
         registerCommands()
-        TeleportDelayer.setPlugin(this) // 将Plugin对象传递给TeleportDelayer
         // if (Config.getConfig().getBoolean("auto-update")) {val updater = Updater(this, 395393, this.file, Updater.UpdateType.DEFAULT, true)}
     }
 
@@ -36,15 +38,16 @@ class SimpleWarp : JavaPlugin() {
         val delWarpCommand = getCommand("delwarp") ?: error("Couldn't get delwarp command! This should not happen!")
         val warpCommand = getCommand("warp") ?: error("Couldn't get warp command! This should not happen!")
         val warpsCommand = getCommand("warps") ?: error("Couldn't get warps command! This should not happen!")
-        val warpVersionCommand =
-            getCommand("warpversion") ?: error("Couldn't get warpversion command! This should not happen!")
+        val simpleWarpCommand =
+            getCommand("simplewarp") ?: error("Couldn't get simplewarp command! This should not happen!")
         val positionCommand = getCommand("position") ?: error("Couldn't get position command! This should not happen!")
         setWarpCommand.setExecutor(SetWarpCommandExecutor())
         delWarpCommand.setExecutor(DelWarpCommandExecutor())
         warpCommand.setExecutor(WarpCommandExecutor())
         warpsCommand.setExecutor(WarpsCommandExecutor())
-        warpVersionCommand.setExecutor(WarpVersionCommandExecutor())
+        simpleWarpCommand.setExecutor(SimpleWarpCommandExecutor())
         positionCommand.setExecutor(PositionCommandExecutor())
+        simpleWarpCommand.tabCompleter = SimpleWarpTabCompleter()
         warpCommand.tabCompleter = WarpTabCompleter()
         delWarpCommand.tabCompleter = WarpTabCompleter()
     }

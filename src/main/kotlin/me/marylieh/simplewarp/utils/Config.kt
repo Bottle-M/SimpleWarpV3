@@ -1,7 +1,9 @@
 package me.marylieh.simplewarp.utils
 
+import me.marylieh.simplewarp.SimpleWarp
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.plugin.Plugin
 import java.io.File
 import java.io.IOException
 
@@ -9,15 +11,21 @@ object Config {
 
     private lateinit var file: File
     private lateinit var config: YamlConfiguration
+    private lateinit var plugin: Plugin
+
+    // 设置插件对象
+    fun setPlugin(plugin: Plugin) {
+        this.plugin = SimpleWarp.instance
+    }
 
     fun loadConfig() {
-        val dir = File("./plugins/SimpleWarp")
+        val dir = plugin.dataFolder // 插件目录
 
         if (!dir.exists()) {
             dir.mkdirs()
         }
 
-        file = File(dir, "Warps.yml")
+        file = File(dir, "configs.yml")
 
         if (!file.exists()) {
             try {
@@ -42,15 +50,18 @@ object Config {
         }
     }
 
-    fun reload() {
+    fun reload(): Boolean {
         try {
             config.load(file)
+            return true
         } catch (e: IOException) {
             e.printStackTrace()
         } catch (e: InvalidConfigurationException) {
             e.printStackTrace()
         }
+        return false
     }
+
     private fun initConfig() {
         // 传送延迟时间(in seconds)
         if (config.get("delay-before-tp") == null) {

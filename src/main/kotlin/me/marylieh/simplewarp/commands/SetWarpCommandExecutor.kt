@@ -18,12 +18,6 @@ class SetWarpCommandExecutor : CommandExecutor {
 
         if (player.hasPermission("simplewarp.setwarp")) {
 
-            if (Config.getConfig().get("player-warps-only") == null) {
-                Config.getConfig().set("player-warps-only", false)
-                println("Old Version of Config detected! Setting player-warps-only to false!")
-                Config.save()
-            }
-
             if (args.size == 1) {
                 val id = args[0]
                 val world: String = player.world.name

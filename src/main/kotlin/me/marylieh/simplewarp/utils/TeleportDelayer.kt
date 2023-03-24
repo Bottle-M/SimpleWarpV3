@@ -15,7 +15,7 @@ object TeleportDelayer {
 
     // 设置插件对象
     fun setPlugin(plugin: Plugin) {
-        this.plugin = plugin
+        this.plugin = SimpleWarp.instance
     }
 
     // 这里用玩家的UUID作为键
@@ -83,7 +83,7 @@ class TeleportTask(
             val xDiff = abs(currPos.x - initialPos.x) // 获得x,y,z上玩家移动的距离
             val yDiff = abs(currPos.y - initialPos.y)
             val zDiff = abs(currPos.z - initialPos.z)
-            // 超过一格就算移动
+            // 超过大半格就算移动
             if (xDiff > 0.6 || yDiff > 0.6 || zDiff > 0.6) {
                 stopWorking() // 取消定时器，传送取消
                 player.sendMessage("${SimpleWarp.instance.prefix} §cTeleportation was cancelled due to movement.")

@@ -18,12 +18,6 @@ class WarpsCommandExecutor : CommandExecutor {
 
         if (player.hasPermission("simplewarp.warps")) {
 
-            if (Config.getConfig().get("player-warps-only") == null) {
-                Config.getConfig().set("player-warps-only", false)
-                println("Old Version of Config detected! Setting player-warps-only to false!")
-                Config.save()
-            }
-
             // 如果没有开启【玩家创建的坐标只能由玩家使用】的选项，就列出所有地标
             if (!Config.getConfig().getBoolean("player-warps-only")) {
                 player.sendMessage(

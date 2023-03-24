@@ -2,13 +2,14 @@ name: SimpleWarp
 api-version: 1.16
 authors:
   - Marylieh
+  - SomeBottle
 main: me.marylieh.simplewarp.SimpleWarp
-version: 3.6
+version: 3.7
 
 commands:
   setwarp:
   delwarp:
   warp:
   warps:
-  warpversion:
+  simplewarp:
   position:
