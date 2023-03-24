@@ -9,7 +9,9 @@ class WarpVersionCommandExecutor : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 
-        sender.sendMessage("${SimpleWarp.instance.prefix} §a${SimpleWarp.instance.version}")
+        sender.sendMessage("${SimpleWarp.instance.prefix} §aVersion: ${SimpleWarp.instance.version}")
+        sender.sendMessage("${SimpleWarp.instance.prefix} §3Forked version by SomeBottle")
+        sender.sendMessage("${SimpleWarp.instance.prefix} §3Original developer -§e marie(marylieh)")
         return true
     }
 }

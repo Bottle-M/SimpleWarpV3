@@ -3,14 +3,20 @@ package me.marylieh.simplewarp.utils
 import me.marylieh.simplewarp.SimpleWarp
 import org.bukkit.entity.Player
 import org.bukkit.Location
-import java.util.*
+import org.bukkit.plugin.Plugin
+import org.bukkit.scheduler.BukkitRunnable
 import kotlin.collections.HashMap
 import kotlin.math.abs
 
 object TeleportDelayer {
     // 用哈希表储存<玩家ID,传送任务>
     private val tasks = HashMap<String, TeleportTask>()
-    private val scheduler: Timer = Timer()
+    private lateinit var plugin: Plugin
+
+    // 设置插件对象
+    fun setPlugin(plugin: Plugin) {
+        this.plugin = plugin
+    }
 
     // 这里用玩家的UUID作为键
     fun tp(player: Player, location: Location, warpId: String) {
@@ -36,7 +42,7 @@ object TeleportDelayer {
             player.sendMessage("${SimpleWarp.instance.prefix} $msg")
         }
         // 添加定时器任务
-        scheduler.schedule(tpTask, 0, 1000); // 先立即执行一次，然后每间隔一秒执行一次，直至任务结束
+        tpTask.runTaskTimer(plugin, 0, 20) // 先立即执行一次，然后每间隔一秒(20ticks)执行一次，直至任务结束
     }
 }
 
@@ -49,7 +55,7 @@ class TeleportTask(
     private var timeLeft: Int,
     private val noMoveAllowed: Boolean,
     private val warpId: String
-) : TimerTask() {
+) : BukkitRunnable() {
     private var initialPos: Location = player.location // 玩家的最初位置
     private var status: Boolean = true
 
@@ -78,7 +84,7 @@ class TeleportTask(
             val yDiff = abs(currPos.y - initialPos.y)
             val zDiff = abs(currPos.z - initialPos.z)
             // 超过一格就算移动
-            if (xDiff > 1 || yDiff > 1 || zDiff > 1) {
+            if (xDiff > 0.6 || yDiff > 0.6 || zDiff > 0.6) {
                 stopWorking() // 取消定时器，传送取消
                 player.sendMessage("${SimpleWarp.instance.prefix} §cTeleportation was cancelled due to movement.")
                 return

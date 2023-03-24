@@ -4,11 +4,12 @@ import me.marylieh.simplewarp.commands.*
 import me.marylieh.simplewarp.commands.position.PositionCommandExecutor
 import me.marylieh.simplewarp.utils.Config
 import org.bukkit.plugin.java.JavaPlugin
+import me.marylieh.simplewarp.utils.TeleportDelayer
 
 class SimpleWarp : JavaPlugin() {
 
     val prefix = "§6[SimpleWarp]"
-    val version = "B-3.6"
+    val version = "3.7"
 
     companion object {
         lateinit var instance: SimpleWarp
@@ -22,7 +23,7 @@ class SimpleWarp : JavaPlugin() {
 
     override fun onEnable() {
         registerCommands()
-
+        TeleportDelayer.setPlugin(this) // 将Plugin对象传递给TeleportDelayer
         // if (Config.getConfig().getBoolean("auto-update")) {val updater = Updater(this, 395393, this.file, Updater.UpdateType.DEFAULT, true)}
     }
 

@@ -24,11 +24,18 @@ class WarpsCommandExecutor : CommandExecutor {
                 Config.save()
             }
 
+            // 如果没有开启【玩家创建的坐标只能由玩家使用】的选项，就列出所有地标
             if (!Config.getConfig().getBoolean("player-warps-only")) {
-                player.sendMessage("${SimpleWarp.instance.prefix} ${Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)}")
+                player.sendMessage(
+                    "${SimpleWarp.instance.prefix} ${
+                        Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)
+                    }"
+                )
+                return true
             }
 
-            val playerWarps = Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)?.filter { Config.getConfig().getString(".Warps.${it}.Owner") == player.uniqueId.toString() }.toString()
+            val playerWarps = Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)
+                ?.filter { Config.getConfig().getString(".Warps.${it}.Owner") == player.uniqueId.toString() }.toString()
 
             player.sendMessage("${SimpleWarp.instance.prefix} $playerWarps")
         } else {
