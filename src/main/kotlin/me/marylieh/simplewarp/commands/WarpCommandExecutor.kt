@@ -2,6 +2,7 @@ package me.marylieh.simplewarp.commands
 
 import me.marylieh.simplewarp.SimpleWarp
 import me.marylieh.simplewarp.utils.Config
+import me.marylieh.simplewarp.utils.TeleportDelayer
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.command.Command
@@ -21,12 +22,17 @@ class WarpCommandExecutor : CommandExecutor {
         if (player.hasPermission("simplewarp.warp")) {
             if (args.size == 1) {
 
-                var id =""
+                var id = ""
                 if (player.hasPermission("simplewarp.warps")) {
-                    val filtered = Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)?.filter{value -> value.lowercase().startsWith(args[0].lowercase())}
-                    if(filtered?.size == 1){id = filtered[0]}
-                } 
-                if(id==""){id = args[0]}
+                    val filtered = Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)
+                        ?.filter { value -> value.lowercase().startsWith(args[0].lowercase()) }
+                    if (filtered?.size == 1) {
+                        id = filtered[0]
+                    }
+                }
+                if (id == "") {
+                    id = args[0]
+                }
                 if (Config.getConfig().getString(".Warps.$id") == null) {
                     player.sendMessage("${SimpleWarp.instance.prefix} §cThis warp doesn't exists!")
                     return true
@@ -54,9 +60,7 @@ class WarpCommandExecutor : CommandExecutor {
 
                 val yaw = Config.getConfig().getInt("Warps.${id}.Yaw").toFloat()
                 val pitch = Config.getConfig().getInt("Warps.${id}.Pitch").toFloat()
-
-                player.teleport(Location(world, x, y, z, yaw, pitch))
-                player.sendMessage("${SimpleWarp.instance.prefix} §aYou have been teleported to §6$id§a!")
+                TeleportDelayer.tp(player, Location(world, x, y, z, yaw, pitch), id)
 
             } else {
                 player.sendMessage("${SimpleWarp.instance.prefix} §cPlease use: §7/warp <warpname>")
