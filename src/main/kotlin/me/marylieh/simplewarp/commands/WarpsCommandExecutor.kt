@@ -27,7 +27,7 @@ class WarpsCommandExecutor : CommandExecutor {
                 )
                 return true
             }
-
+            // 否则列出这个玩家创建的所有地标
             val playerWarps = Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)
                 ?.filter { Config.getConfig().getString(".Warps.${it}.Owner") == player.uniqueId.toString() }.toString()
 

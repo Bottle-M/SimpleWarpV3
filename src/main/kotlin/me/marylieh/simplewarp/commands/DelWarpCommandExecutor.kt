@@ -18,16 +18,19 @@ class DelWarpCommandExecutor : CommandExecutor {
 
         if (player.hasPermission("simplewarp.delwarp")) {
             if (args.size == 1) {
-
                 val id = args[0]
-
+                // 如果有player-warps-only这个设计的话，删除的时候不应该不进行检查。
+                if (Config.getConfig().getBoolean("player-warps-only")) {
+                    if (Config.getConfig().getString(".Warps.${id}.Owner") != player.uniqueId.toString()) {
+                        player.sendMessage("${SimpleWarp.instance.prefix} §cYou don't have the permission to do that!")
+                        return true
+                    }
+                }
                 Config.getConfig().set(".Warps.$id", null)
                 Config.save()
-
                 player.sendMessage("${SimpleWarp.instance.prefix} §aThe Warp §6 $id §a was successfully deleted!")
-
             } else {
-                player.sendMessage("${SimpleWarp.instance.prefix} §cPleas use: §7/warp <warpname>")
+                player.sendMessage("${SimpleWarp.instance.prefix} §cPlease use: §7/warp <warpname>")
             }
         } else {
             player.sendMessage("${SimpleWarp.instance.prefix} §cYou don't have the permission to do that!")

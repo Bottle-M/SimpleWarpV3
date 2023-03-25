@@ -21,7 +21,6 @@ class WarpCommandExecutor : CommandExecutor {
 
         if (player.hasPermission("simplewarp.warp")) {
             if (args.size == 1) {
-
                 var id = ""
                 if (player.hasPermission("simplewarp.warps")) {
                     val filtered = Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)
@@ -39,7 +38,6 @@ class WarpCommandExecutor : CommandExecutor {
                 }
 
                 if (Config.getConfig().getBoolean("player-warps-only")) {
-                    println(Config.getConfig().getBoolean("player-warps-only"))
                     if (Config.getConfig().getString(".Warps.${id}.Owner") != player.uniqueId.toString()) {
                         player.sendMessage("${SimpleWarp.instance.prefix} §cYou don't have the permission to do that!")
                         return true

@@ -1,6 +1,5 @@
 package me.marylieh.simplewarp.utils
 
-import me.marylieh.simplewarp.SimpleWarp
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
@@ -15,7 +14,7 @@ object Config {
 
     // 设置插件对象
     fun setPlugin(plugin: Plugin) {
-        this.plugin = SimpleWarp.instance
+        this.plugin = plugin
     }
 
     fun loadConfig() {

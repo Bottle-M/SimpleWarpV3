@@ -15,7 +15,7 @@ object TeleportDelayer {
 
     // 设置插件对象
     fun setPlugin(plugin: Plugin) {
-        this.plugin = SimpleWarp.instance
+        this.plugin = plugin
     }
 
     // 这里用玩家的UUID作为键
