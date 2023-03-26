@@ -8,15 +8,65 @@ import me.marylieh.simplewarp.SimpleWarp
 object Messages {
     // 提示信息中包含的前缀内容，往往是插件名
     private val PREFIX = SimpleWarp.plugin.prefix
+
     // 执行指令的不是玩家
     val notAPlayer: String = "$PREFIX §4This command can only be executed by a player!"
+
     // 指令执行者没有权限
     val noPermission: String = "$PREFIX §cYou don't have the permission to do that!"
+
     // 配置成功重载
-    val reloadSuccess:String="$PREFIX Successfully reloaded the configs"
+    val reloadSuccess: String = "$PREFIX Successfully reloaded the configs"
+
     // 配置重载失败
-    val reloadFailure:String="$PREFIX §bFailed to reload configs!"
-    val warpNotExist:String="$PREFIX §cThis warp doesn't exists!"
+    val reloadFailure: String = "$PREFIX §bFailed to reload configs!"
+
+    // 地标不存在
+    val warpNotExist: String = "$PREFIX §cThis warp doesn't exists!"
+
+    // 位置信息不存在
+    val posNotExist: String = "$PREFIX §cThis position doesn't exists."
+
+    // 由于玩家移动，传送取消
+    val tpCancelledByMovement: String = "$PREFIX §cTeleportation was cancelled due to movement."
+
+    // 功能未启动
+    val featureNotAvailable: String = "$PREFIX §cThis feature has been disabled by a Network Administrator!"
+
+    // 列出所有地标
+    fun listWarps(warps: Collection<String>?): String {
+        return "$PREFIX All available warps: ${warps?.joinToString(", ")}"
+    }
+
+    // 列出玩家拥有的地标
+    fun listPlayerWarps(warps: Collection<String>?): String {
+        return "$PREFIX Warps you owned: ${warps?.joinToString(", ")}"
+    }
+
+    // 列出所有位置信息
+    fun listPositions(positions: Collection<String>?): String {
+        return "$PREFIX §7Available §9positions: §b${positions?.joinToString(", ")}"
+    }
+
+    // 传送延迟时发给玩家的消息
+    fun teleportDelay(timeDelay: Int, noMoveAllowed: Boolean): String {
+        var msg = "$PREFIX §aTeleportation will start in §6$timeDelay§a second(s). "
+        if (noMoveAllowed)
+            msg += "Please §cdo not move§a while waiting."
+        return msg
+    }
+
+    // 传送到地标时发送给玩家的消息
+    fun teleportedTo(warpId: String): String {
+        return "$PREFIX §aYou have been teleported to §6$warpId§a!"
+    }
+
+    // 位置信息被删除
+    fun positionDeleted(posId: String): String {
+        return "$PREFIX The Position §a${posId} §6has been successfully §cdeleted!"
+    }
+
+    // 地标被删除
     fun warpDeleted(warpId: String): String {
         return "$PREFIX §aWarp §6$warpId §a was successfully deleted!"
     }

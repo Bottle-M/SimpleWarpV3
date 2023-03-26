@@ -19,15 +19,14 @@ class WarpsCommandExecutor : CommandExecutor {
         if (player.hasPermission("simplewarp.warps")) {
             // 如果没有开启【玩家创建的地标只能由玩家使用】的选项，就列出所有地标
             if (!Config.getConfig().getBoolean("player-warps-only")) {
-                player.sendMessage(Messages.custom("All available warps: ${allWarps?.joinToString(", ")}"))
+                player.sendMessage(Messages.listWarps(allWarps))
                 return true
             }
             // 否则列出这个玩家创建的所有地标
             val playerWarps =
                 allWarps?.filter { Config.getConfig().getString(".Warps.${it}.Owner") == player.uniqueId.toString() }
-                    ?.joinToString(", ")
 
-            player.sendMessage(Messages.custom("Warps you owned: $playerWarps"))
+            player.sendMessage(Messages.listPlayerWarps(playerWarps))
         } else {
             player.sendMessage(Messages.noPermission)
         }

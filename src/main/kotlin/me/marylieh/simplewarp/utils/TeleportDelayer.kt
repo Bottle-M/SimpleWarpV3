@@ -20,7 +20,8 @@ object TeleportDelayer {
         // 等待时是否允许玩家移动
         val noMoveAllowed = Config.getConfig().getBoolean("no-move-allowed-before-tp")
         // 创建传送任务（计时器）对象
-        val tpTask = TeleportTask(player, location, timeDelay, noMoveAllowed, warpId)
+        // 这里timeDelay*2是因为tpTask每半秒被执行一次
+        val tpTask = TeleportTask(player, location, timeDelay * 2, noMoveAllowed, warpId)
         val taskKey = player.uniqueId.toString()
         if (tasks.containsKey(taskKey) && tasks[taskKey]?.isWorking() == true) {
             // 如果当前用户下还有正在运行的计时器，就取消掉
@@ -29,13 +30,10 @@ object TeleportDelayer {
         tasks[taskKey] = tpTask // 将传送任务存入哈希表
         // 如果有延迟时间，就提醒玩家
         if (timeDelay > 0) {
-            var msg = "§aTeleportation will start in §6$timeDelay§a second(s). "
-            if (noMoveAllowed)
-                msg += "Please §cdo not move§a while waiting."
-            player.sendMessage("${SimpleWarp.plugin.prefix} $msg")
+            player.sendMessage(Messages.teleportDelay(timeDelay, noMoveAllowed))
         }
         // 添加定时器任务
-        tpTask.runTaskTimer(SimpleWarp.plugin, 0, 20) // 先立即执行一次，然后每间隔一秒(20ticks)执行一次，直至任务结束
+        tpTask.runTaskTimer(SimpleWarp.plugin, 0, 10) // 先立即执行一次，然后每间隔半秒(10ticks)执行一次，直至任务结束
     }
 }
 
@@ -65,7 +63,7 @@ class TeleportTask(
 
     override fun run() {
         if (timeLeft <= 0) {
-            player.sendMessage("${SimpleWarp.plugin.prefix} §aYou have been teleported to §6$warpId§a!")
+            player.sendMessage(Messages.teleportedTo(warpId))
             player.teleport(location) // 倒计时结束立即传送
             stopWorking() // 玩家已传送，计时器任务停止
             return
@@ -79,7 +77,7 @@ class TeleportTask(
             // 超过大半格就算移动
             if (xDiff > 0.6 || yDiff > 0.6 || zDiff > 0.6) {
                 stopWorking() // 取消定时器，传送取消
-                player.sendMessage("${SimpleWarp.plugin.prefix} §cTeleportation was cancelled due to movement.")
+                player.sendMessage(Messages.tpCancelledByMovement)
                 return
             }
         }

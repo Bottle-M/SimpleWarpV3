@@ -2,6 +2,7 @@ package me.marylieh.simplewarp.commands.position
 
 import me.marylieh.simplewarp.SimpleWarp
 import me.marylieh.simplewarp.utils.Config
+import me.marylieh.simplewarp.utils.Messages
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -13,37 +14,35 @@ class PositionCommandExecutor : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage("${SimpleWarp.plugin.prefix} §4Just a Player can execute this command!")
+            sender.sendMessage(Messages.notAPlayer)
         }
         val player: Player = sender as Player
-
         if (!player.hasPermission("simplewarp.position")) {
-            player.sendMessage("${SimpleWarp.plugin.prefix} §cYou don't have the permission to do that!")
+            player.sendMessage(Messages.noPermission)
             return true
         }
 
         if (!Config.getConfig().getBoolean("position-system")) {
-            player.sendMessage("${SimpleWarp.plugin.prefix} §cThis feature has been disabled by a Network Administrator!")
+            player.sendMessage(Messages.featureNotAvailable)
             return true
         }
 
+        val allPositions = Config.getConfig().getConfigurationSection("Positions")?.getKeys(false)
         if (args.size == 1 || args.size == 2) {
             when (args[0]) {
                 "list" -> {
                     if (!player.hasPermission("simplewarp.position.list")) {
-                        player.sendMessage("${SimpleWarp.plugin.prefix} §cYou don't have the permission to do that!")
+                        player.sendMessage(Messages.noPermission)
                         return true
                     }
                     player.sendMessage(
-                        "${SimpleWarp.plugin.prefix} §7Available §9positions: §b${
-                            Config.getConfig().getConfigurationSection("Positions")?.getKeys(false)
-                        }"
+                        Messages.custom(Messages.listPositions(allPositions))
                     )
                 }
 
                 "del" -> {
                     if (!player.hasPermission("simplewarp.position.del")) {
-                        player.sendMessage("${SimpleWarp.plugin.prefix} §cYou don't have the permission to do that!")
+                        player.sendMessage(Messages.noPermission)
                         return true
                     }
 
@@ -52,9 +51,9 @@ class PositionCommandExecutor : CommandExecutor {
                         Config.getConfig().set("Positions.${args[1]}", null)
                         Config.save()
 
-                        player.sendMessage("${SimpleWarp.plugin.prefix} The Position §a${args[1]} §6has been successfully §cdeleted!")
+                        player.sendMessage(Messages.positionDeleted(args[1]))
                     } else {
-                        player.sendMessage("${SimpleWarp.plugin.prefix} §cThis position didn't exists.")
+                        player.sendMessage(Messages.posNotExist)
                         return true
                     }
                 }
@@ -65,7 +64,7 @@ class PositionCommandExecutor : CommandExecutor {
                     if (Config.getConfig().getString("Positions.$id") != null) {
 
                         if (!player.hasPermission("simplewarp.position.view")) {
-                            player.sendMessage("${SimpleWarp.plugin.prefix} §cYou do not have the Permission to do that!")
+                            player.sendMessage(Messages.noPermission)
                             return true
                         }
 
@@ -75,12 +74,12 @@ class PositionCommandExecutor : CommandExecutor {
                         val y = Config.getConfig().getInt("Positions.${id}.Y")
                         val z = Config.getConfig().getInt("Positions.${id}.Z")
 
-                        player.sendMessage("${SimpleWarp.plugin.prefix} §9$id §8[§6$x§8, §6$y§8, §6$z§8, §6$world§8]")
+                        player.sendMessage(Messages.custom("§9$id §8[§6$x§8, §6$y§8, §6$z§8, §6$world§8]"))
                         return true
                     }
 
                     if (!player.hasPermission("simplewarp.position.create")) {
-                        player.sendMessage("${SimpleWarp.plugin.prefix} §cYou do not have the Permission to do that!")
+                        player.sendMessage(Messages.noPermission)
                         return true
                     }
 
@@ -101,7 +100,7 @@ class PositionCommandExecutor : CommandExecutor {
                 }
             }
         } else {
-            player.sendMessage("${SimpleWarp.plugin.prefix} Invalid Argument, please use one of the following arguments: §c/position <list | position | del>")
+            player.sendMessage(Messages.usage("§c/position <list | position | del>"))
         }
         return true
     }
