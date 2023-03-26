@@ -1,7 +1,7 @@
 package me.marylieh.simplewarp.commands
 
-import me.marylieh.simplewarp.SimpleWarp
 import me.marylieh.simplewarp.utils.Config
+import me.marylieh.simplewarp.utils.Messages
 import me.marylieh.simplewarp.utils.TeleportDelayer
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -14,51 +14,54 @@ class WarpCommandExecutor : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage("${SimpleWarp.instance.prefix} §4Just a Player can execute this command!")
+            sender.sendMessage(Messages.notAPlayer)
             return true
         }
         val player: Player = sender
 
         if (player.hasPermission("simplewarp.warp")) {
             if (args.size == 1) {
-                var id = ""
+                var warpId = ""
                 if (player.hasPermission("simplewarp.warps")) {
+                    // 模糊匹配地标，用户可以只输入地标名的开头几个字符
                     val filtered = Config.getConfig().getConfigurationSection(".Warps")?.getKeys(false)
                         ?.filter { value -> value.lowercase().startsWith(args[0].lowercase()) }
                     if (filtered?.size == 1) {
-                        id = filtered[0]
+                        warpId = filtered[0]
                     }
                 }
-                if (id == "") {
-                    id = args[0]
+                // 没有模糊匹配到，就采用用户输入
+                if (warpId == "") {
+                    warpId = args[0]
                 }
-                if (Config.getConfig().getString(".Warps.$id") == null) {
-                    player.sendMessage("${SimpleWarp.instance.prefix} §cThis warp doesn't exists!")
+                // 地标不存在
+                if (Config.getConfig().getString(".Warps.$warpId") == null) {
+                    player.sendMessage(Messages.warpNotExist)
                     return true
                 }
 
                 if (Config.getConfig().getBoolean("player-warps-only")) {
-                    if (Config.getConfig().getString(".Warps.${id}.Owner") != player.uniqueId.toString()) {
-                        player.sendMessage("${SimpleWarp.instance.prefix} §cYou don't have the permission to do that!")
+                    if (Config.getConfig().getString(".Warps.${warpId}.Owner") != player.uniqueId.toString()) {
+                        player.sendMessage(Messages.noPermission)
                         return true
                     }
                 }
 
-                val world = Bukkit.getWorld(Config.getConfig().getString(".Warps.${id}.World")!!)
+                val world = Bukkit.getWorld(Config.getConfig().getString(".Warps.${warpId}.World")!!)
 
-                val x = Config.getConfig().getInt("Warps.${id}.X").toDouble()
-                val y = Config.getConfig().getInt("Warps.${id}.Y").toDouble()
-                val z = Config.getConfig().getInt("Warps.${id}.Z").toDouble()
+                val x = Config.getConfig().getInt("Warps.${warpId}.X").toDouble()
+                val y = Config.getConfig().getInt("Warps.${warpId}.Y").toDouble()
+                val z = Config.getConfig().getInt("Warps.${warpId}.Z").toDouble()
 
-                val yaw = Config.getConfig().getInt("Warps.${id}.Yaw").toFloat()
-                val pitch = Config.getConfig().getInt("Warps.${id}.Pitch").toFloat()
-                TeleportDelayer.tp(player, Location(world, x, y, z, yaw, pitch), id)
+                val yaw = Config.getConfig().getInt("Warps.${warpId}.Yaw").toFloat()
+                val pitch = Config.getConfig().getInt("Warps.${warpId}.Pitch").toFloat()
+                TeleportDelayer.tp(player, Location(world, x, y, z, yaw, pitch), warpId)
 
             } else {
-                player.sendMessage("${SimpleWarp.instance.prefix} §cPlease use: §7/warp <warpname>")
+                player.sendMessage(Messages.usage("§7/warp <warpName>"))
             }
         } else {
-            player.sendMessage("${SimpleWarp.instance.prefix} §cYou don't have the permission to do that!")
+            player.sendMessage(Messages.noPermission)
         }
         return true
     }

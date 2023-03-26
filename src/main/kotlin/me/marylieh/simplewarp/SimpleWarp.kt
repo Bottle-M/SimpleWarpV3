@@ -4,7 +4,6 @@ import me.marylieh.simplewarp.commands.*
 import me.marylieh.simplewarp.commands.position.PositionCommandExecutor
 import me.marylieh.simplewarp.utils.Config
 import org.bukkit.plugin.java.JavaPlugin
-import me.marylieh.simplewarp.utils.TeleportDelayer
 
 class SimpleWarp : JavaPlugin() {
 
@@ -13,15 +12,13 @@ class SimpleWarp : JavaPlugin() {
 
     // 伴生对象
     companion object {
-        lateinit var instance: SimpleWarp
-            private set
+        lateinit var plugin: SimpleWarp
+            private set // 私有化setter
     }
 
     override fun onLoad() {
-        Config.setPlugin(this) // 将Plugin对象传递给Config
-        TeleportDelayer.setPlugin(this) // 将Plugin对象传递给TeleportDelayer
+        plugin = this // 暴露插件Plugin对象
         Config.loadConfig()
-        instance = this
     }
 
     override fun onEnable() {

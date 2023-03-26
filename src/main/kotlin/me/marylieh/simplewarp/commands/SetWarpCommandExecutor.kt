@@ -1,7 +1,7 @@
 package me.marylieh.simplewarp.commands
 
-import me.marylieh.simplewarp.SimpleWarp
 import me.marylieh.simplewarp.utils.Config
+import me.marylieh.simplewarp.utils.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -11,7 +11,7 @@ class SetWarpCommandExecutor : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage("${SimpleWarp.instance.prefix} §4Just a Player can execute this command!")
+            sender.sendMessage(Messages.notAPlayer)
             return true
         }
         val player: Player = sender
@@ -19,7 +19,7 @@ class SetWarpCommandExecutor : CommandExecutor {
         if (player.hasPermission("simplewarp.setwarp")) {
 
             if (args.size == 1) {
-                val id = args[0]
+                val warpId = args[0]
                 val world: String = player.world.name
 
                 val x = player.location.x
@@ -29,24 +29,24 @@ class SetWarpCommandExecutor : CommandExecutor {
                 val yaw = player.location.yaw
                 val pitch = player.location.pitch
 
-                Config.getConfig().set(".Warps.${id}.World", world)
-                Config.getConfig().set(".Warps.${id}.X", x)
-                Config.getConfig().set(".Warps.${id}.Y", y)
-                Config.getConfig().set(".Warps.${id}.Z", z)
+                Config.getConfig().set(".Warps.${warpId}.World", world)
+                Config.getConfig().set(".Warps.${warpId}.X", x)
+                Config.getConfig().set(".Warps.${warpId}.Y", y)
+                Config.getConfig().set(".Warps.${warpId}.Z", z)
 
-                Config.getConfig().set(".Warps.${id}.Yaw", yaw)
-                Config.getConfig().set(".Warps.${id}.Pitch", pitch)
+                Config.getConfig().set(".Warps.${warpId}.Yaw", yaw)
+                Config.getConfig().set(".Warps.${warpId}.Pitch", pitch)
 
-                Config.getConfig().set(".Warps.${id}.Owner", player.uniqueId.toString())
+                Config.getConfig().set(".Warps.${warpId}.Owner", player.uniqueId.toString())
 
-                player.sendMessage("${SimpleWarp.instance.prefix} §aYou successfully set the Warp §6${id}§a!")
+                player.sendMessage(Messages.warpSet(warpId))
 
                 Config.save()
             } else {
-                player.sendMessage("${SimpleWarp.instance.prefix} §cPlease use: §7/setwarp <warpname>")
+                player.sendMessage(Messages.usage("§7/setwarp <warpName>"))
             }
         } else {
-            player.sendMessage("${SimpleWarp.instance.prefix} §cYou don't have the permission to do that!")
+            player.sendMessage(Messages.noPermission)
         }
 
         return true

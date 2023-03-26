@@ -1,8 +1,8 @@
 package me.marylieh.simplewarp.utils
 
+import me.marylieh.simplewarp.SimpleWarp
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.plugin.Plugin
 import java.io.File
 import java.io.IOException
 
@@ -10,15 +10,8 @@ object Config {
 
     private lateinit var file: File
     private lateinit var config: YamlConfiguration
-    private lateinit var plugin: Plugin
-
-    // 设置插件对象
-    fun setPlugin(plugin: Plugin) {
-        this.plugin = plugin
-    }
-
     fun loadConfig() {
-        val dir = plugin.dataFolder // 插件目录
+        val dir = SimpleWarp.plugin.dataFolder // 插件目录
 
         if (!dir.exists()) {
             dir.mkdirs()

@@ -3,7 +3,6 @@ package me.marylieh.simplewarp.utils
 import me.marylieh.simplewarp.SimpleWarp
 import org.bukkit.entity.Player
 import org.bukkit.Location
-import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.collections.HashMap
 import kotlin.math.abs
@@ -11,12 +10,6 @@ import kotlin.math.abs
 object TeleportDelayer {
     // 用哈希表储存<玩家ID,传送任务>
     private val tasks = HashMap<String, TeleportTask>()
-    private lateinit var plugin: Plugin
-
-    // 设置插件对象
-    fun setPlugin(plugin: Plugin) {
-        this.plugin = plugin
-    }
 
     // 这里用玩家的UUID作为键
     fun tp(player: Player, location: Location, warpId: String) {
@@ -39,10 +32,10 @@ object TeleportDelayer {
             var msg = "§aTeleportation will start in §6$timeDelay§a second(s). "
             if (noMoveAllowed)
                 msg += "Please §cdo not move§a while waiting."
-            player.sendMessage("${SimpleWarp.instance.prefix} $msg")
+            player.sendMessage("${SimpleWarp.plugin.prefix} $msg")
         }
         // 添加定时器任务
-        tpTask.runTaskTimer(plugin, 0, 20) // 先立即执行一次，然后每间隔一秒(20ticks)执行一次，直至任务结束
+        tpTask.runTaskTimer(SimpleWarp.plugin, 0, 20) // 先立即执行一次，然后每间隔一秒(20ticks)执行一次，直至任务结束
     }
 }
 
@@ -72,7 +65,7 @@ class TeleportTask(
 
     override fun run() {
         if (timeLeft <= 0) {
-            player.sendMessage("${SimpleWarp.instance.prefix} §aYou have been teleported to §6$warpId§a!")
+            player.sendMessage("${SimpleWarp.plugin.prefix} §aYou have been teleported to §6$warpId§a!")
             player.teleport(location) // 倒计时结束立即传送
             stopWorking() // 玩家已传送，计时器任务停止
             return
@@ -86,7 +79,7 @@ class TeleportTask(
             // 超过大半格就算移动
             if (xDiff > 0.6 || yDiff > 0.6 || zDiff > 0.6) {
                 stopWorking() // 取消定时器，传送取消
-                player.sendMessage("${SimpleWarp.instance.prefix} §cTeleportation was cancelled due to movement.")
+                player.sendMessage("${SimpleWarp.plugin.prefix} §cTeleportation was cancelled due to movement.")
                 return
             }
         }
